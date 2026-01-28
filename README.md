@@ -8,10 +8,11 @@ To write a program to predict the marks scored by a student using the simple lin
 2. Anaconda – Python 3.7 Installation / Jupyter notebook
 
 ## Algorithm
-1. Start the program and input the dataset containing hours studied (independent variable) and marks scored (dependent variable).
-2.Create and train the Simple Linear Regression model using the given dataset. 
-3. Predict the marks for the given number of study hours using the trained model.
-4. Display the predicted result and plot the regression line along with the actual data points.
+1. Read the dataset containing study hours (independent variable) and marks scored (dependent variable).
+2. Calculate the mean of study hours and marks, then compute the slope (m) and intercept (b) of the regression line. 
+3. Predict the marks using the simple linear regression equation:
+         Y=mX+b
+4. Display the predicted marks and plot the regression line along with the given data points.
 
 ## Program:
 ```
@@ -24,29 +25,40 @@ RegisterNumber:  212224240010
 
 ```python
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
-from sklearn.linear_model import LinearRegression
-X = np.array([1, 2, 3, 4, 5, 6, 7, 8]).reshape(-1, 1)
-Y = np.array([35, 40, 50, 55, 65, 70, 75, 85])
-model = LinearRegression()
-model.fit(X, Y)
-hours = np.array([9]).reshape(-1, 1)
-predicted_marks = model.predict(hours)
-print("Predicted marks for 9 hours of study:", predicted_marks[0])
-Y_pred = model.predict(X)
+data = pd.read_csv("student_scores.csv")
+X = data['Hours'].values
+Y = data['Scores'].values
+X_mean = np.mean(X)
+Y_mean = np.mean(Y)
+num = 0
+den = 0
+for i in range(len(X)):
+    num += (X[i] - X_mean) * (Y[i] - Y_mean)
+    den += (X[i] - X_mean) ** 2
 
-plt.scatter(X, Y, label="Actual Marks")
-plt.plot(X, Y_pred, label="Regression Line")
-plt.xlabel("Hours Studied")
+m = num / den
+b = Y_mean - (m * X_mean)
+Y_pred = m * X + b
+
+print("Slope (m):", m)
+print("Intercept (b):", b)
+hours = float(input("Enter number of study hours: "))
+predicted_marks = m * hours + b
+print("Predicted Marks:", predicted_marks)
+plt.scatter(X, Y)
+plt.plot(X, Y_pred)
+plt.xlabel("Study Hours")
 plt.ylabel("Marks Scored")
-plt.title("Simple Linear Regression - Marks Prediction")
-plt.legend()
+plt.title("Simple Linear Regression – Marks Prediction")
 plt.show()
 ```
 
 ## Output:
 
-<img width="804" height="648" alt="image" src="https://github.com/user-attachments/assets/14cf815e-b03f-48c0-9c74-7ea8f603f52a" />
+<img width="927" height="855" alt="image" src="https://github.com/user-attachments/assets/1fdb5bb0-6ea0-4ad0-acf9-a147bddaae43" />
+
 
 
 
